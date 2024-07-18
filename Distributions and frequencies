@@ -1,0 +1,111 @@
+##create tables for factors and histograms for continuous to assess distribution and frequencies
+table(binlogtest2$fs030)
+table(binlogtest2$fs004)
+table(binlogtest2$fs071)
+table(binlogtest2$peerstat)
+table(binlogtest2$q1073)
+table(binlogtest2$EdAtt)
+table(binlogtest$f_rgsc91)
+table(binlogtest$q1rg91)
+
+threewaytab1 <- xtabs(~binlogtest2$fs004 + binlogtest2$fs030 + binlogtest2$q1rg91)
+threewayftab1 <- ftable(threewaytab1)
+threewayftab1
+
+threewaytab2 <- xtabs(~binlogtest2$fs071 + binlogtest2$fs030 + binlogtest2$q1rg91)
+threewayftab2 <- ftable(threewaytab2)
+threewayftab2
+
+threewaytab3 <- xtabs(~binlogtest2$peerstat + binlogtest2$fs030 + binlogtest2$q1rg91)
+threewayftab3 <- ftable(threewaytab3)
+threewayftab3
+
+threewaytab4 <- xtabs(~binlogtest2$q1073 + binlogtest2$fs030 + binlogtest2$q1rg91)
+threewayftab4 <- ftable(threewaytab4)
+threewayftab4
+
+threewaytab5 <- xtabs(~binlogtest2$EdAtt + binlogtest2$fs030 + binlogtest2$q1rg91)
+threewayftab5 <- ftable(threewaytab5)
+threewayftab5
+
+threewaytab6 <- xtabs(~binlogtest2$f_rgsc91 + binlogtest2$fs030 + binlogtest2$q1rg91)
+threewayftab6 <- ftable(threewaytab6)
+threewayftab6
+
+hist(binlogtest2$rs175)
+hist(binlogtest2$rs179)
+hist(binlogtest2$rs180)
+hist(binlogtest2$rs181)
+hist(binlogtest2$TotalRutterA)
+
+skewness(binlogtest2$rs175)
+skewness(binlogtest2$rs179)
+skewness(binlogtest2$rs180)
+skewness(binlogtest2$rs181)
+skewness(binlogtest2$TotalRutterA)
+
+ggdensity(binlogtest2, x = "rs175", fill = "lightgrey", add = "mean", rug = TRUE, color = "fs030", palette = c("#00AFBB", "#E7B800"), linetype = "dashed")
+ggqqplot(binlogtest2, x = "rs175")
+ggqqplot(binlogtest2, x = "rs179")
+ggqqplot(binlogtest2, x = "rs180")
+ggqqplot(binlogtest2, x = "rs181")
+ggqqplot(binlogtest2, x = "TotalRutterA")
+
+##assess mean and range of continuous variables
+tapply(binlogtest2$rs175, binlogtest2$fs030, mean, na.rm=T)
+tapply(binlogtest2$rs175, binlogtest2$fs030, median, na.rm=T)
+tapply(binlogtest2$rs175, binlogtest2$fs030, range, na.rm=T)
+tapply(binlogtest2$rs175, binlogtest2$fs030, IQR, na.rm=T)
+tapply(binlogtest2$TotalRutterA, binlogtest2$fs030, mean, na.rm=T)
+tapply(binlogtest2$TotalRutterA, binlogtest2$fs030, median, na.rm=T)
+tapply(binlogtest2$TotalRutterA, binlogtest2$fs030, range, na.rm=T)
+tapply(binlogtest2$TotalRutterA, binlogtest2$fs030, IQR, na.rm=T)
+tapply(binlogtest2$rs180, binlogtest2$fs030, mean, na.rm=T)
+tapply(binlogtest2$rs180, binlogtest2$fs030, median, na.rm=T)
+tapply(binlogtest2$rs180, binlogtest2$fs030, range, na.rm=T)
+tapply(binlogtest2$rs180, binlogtest2$fs030, IQR, na.rm=T)
+tapply(binlogtest2$rs181, binlogtest2$fs030, mean, na.rm=T)
+tapply(binlogtest2$rs181, binlogtest2$fs030, median, na.rm=T)
+tapply(binlogtest2$rs181, binlogtest2$fs030, range, na.rm=T)
+tapply(binlogtest2$rs181, binlogtest2$fs030, IQR, na.rm=T)
+tapply(binlogtest2$rs179, binlogtest2$fs030, mean, na.rm=T)
+tapply(binlogtest2$rs179, binlogtest2$fs030, median, na.rm=T)
+tapply(binlogtest2$rs179, binlogtest2$fs030, range, na.rm=T)
+tapply(binlogtest2$rs179, binlogtest2$fs030, IQR, na.rm=T)
+
+boxplot(binlogtest2$rs175 ~ binlogtest2$fs030)
+boxplot(binlogtest2$rs179 ~ binlogtest2$fs030)
+boxplot(binlogtest2$rs180 ~ binlogtest2$fs030)
+boxplot(binlogtest2$rs181 ~ binlogtest2$fs030)
+boxplot(binlogtest2$TotalRutterA ~ binlogtest2$fs030)
+
+tapply(binlogtest2$rs175, binlogtest2$q1rg91, mean, na.rm=T)
+tapply(binlogtest2$rs175, binlogtest2$q1rg91, median, na.rm=T)
+tapply(binlogtest2$rs175, binlogtest2$q1rg91, range, na.rm=T)
+tapply(binlogtest2$rs175, binlogtest2$q1rg91, IQR, na.rm=T)
+tapply(binlogtest2$TotalRutterA, binlogtest2$q1rg91, mean, na.rm=T)
+tapply(binlogtest2$TotalRutterA, binlogtest2$q1rg91, median, na.rm=T)
+tapply(binlogtest2$TotalRutterA, binlogtest2$q1rg91, range, na.rm=T)
+tapply(binlogtest2$TotalRutterA, binlogtest2$q1rg91, IQR, na.rm=T)
+tapply(binlogtest2$rs180, binlogtest2$q1rg91, mean, na.rm=T)
+tapply(binlogtest2$rs180, binlogtest2$q1rg91, median, na.rm=T)
+tapply(binlogtest2$rs180, binlogtest2$q1rg91, range, na.rm=T)
+tapply(binlogtest2$rs180, binlogtest2$q1rg91, IQR, na.rm=T)
+tapply(binlogtest2$rs181, binlogtest2$q1rg91, mean, na.rm=T)
+tapply(binlogtest2$rs181, binlogtest2$q1rg91, median, na.rm=T)
+tapply(binlogtest2$rs181, binlogtest2$q1rg91, range, na.rm=T)
+tapply(binlogtest2$rs181, binlogtest2$q1rg91, IQR, na.rm=T)
+tapply(binlogtest2$rs179, binlogtest2$q1rg91, mean, na.rm=T)
+tapply(binlogtest2$rs179, binlogtest2$q1rg91, median, na.rm=T)
+tapply(binlogtest2$rs179, binlogtest2$q1rg91, range, na.rm=T)
+tapply(binlogtest2$rs179, binlogtest2$q1rg91, IQR, na.rm=T)
+
+#Ho median scores for cotninuous variables are equal between CWoE and CWoE
+#conduct a two-sided wilcoxon test to test the assumption
+wilcox.test(binlogtest2$rs175 ~ binlogtest2$fs030, mu=0, alt="two.sided", conf.int=TRUE, conf.level=0.95, paired=FALSE, exact=FALSE, correct=TRUE)
+wilcox.test(binlogtest2$rs179 ~ binlogtest2$fs030, mu=0, alt="two.sided", conf.int=TRUE, conf.level=0.95, paired=FALSE, exact=FALSE, correct=TRUE)
+wilcox.test(binlogtest2$rs180 ~ binlogtest2$fs030, mu=0, alt="two.sided", conf.int=TRUE, conf.level=0.95, paired=FALSE, exact=FALSE, correct=TRUE)
+wilcox.test(binlogtest2$rs181 ~ binlogtest2$fs030, mu=0, alt="two.sided", conf.int=TRUE, conf.level=0.95, paired=FALSE, exact=FALSE, correct=TRUE)
+wilcox.test(binlogtest2$TotalRutterA ~ binlogtest2$fs030, mu=0, alt="two.sided", conf.int=TRUE, conf.level=0.95, paired=FALSE, exact=FALSE, correct=TRUE)
+
+
