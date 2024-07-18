@@ -1,0 +1,164 @@
+##missing data analysis - frequency, pattern, and MCAR test
+install.packages("naniar")
+library(naniar)
+ggplot2::aes(x = binlogtest2$q1rg91, y = binlogtest2$f_rgsc91) 
+miss_case_summary(binlogtest2)
+miss_var_summary(binlogtest2)
+mcarbinlogtest <- mcar_test(data = binlogtest2)
+mcarbinlogtest
+na.test(binlogtest2, digits = 2, p.digits = 3, as.na = NULL, check = TRUE, output = TRUE)
+missing_pattern(binlogtest2)
+
+
+##check if missing data is associated with observed data
+#recode variables with missing data as 0 or 1 and conduct ANOVA with non-missing variables
+##conduct regression on observed and missing data to assess if observed variables are associated with missing data points, this was done in SPSS
+##Multiple imputation of missing data using MCMC method
+binlogtestIMP <- mice(data = binlogtest2, m = 20, method = "rf", maxit = 100, seed = 123456, remove.collinear = FALSE)
+
+##summarise imputation 
+summary(binlogtestIMP)
+
+##view imputations for each variable
+binlogtestIMP$imp$fs071
+binlogtestIMP$imp$peerstat
+binlogtestIMP$imp$q1073
+binlogtestIMP$imp$EdAtt
+binlogtestIMP$imp$EdAtt2
+binlogtestIMP$imp$f_rgsc91
+binlogtestIMP$imp$q1rg91
+
+##extract each imputed dataset
+finalIMP1 <- complete(binlogtestIMP, 1)
+finalIMP2 <- complete(binlogtestIMP, 2)
+finalIMP3 <- complete(binlogtestIMP, 3)
+finalIMP4 <- complete(binlogtestIMP, 4)
+finalIMP5 <- complete(binlogtestIMP, 5)
+finalIMP6 <- complete(binlogtestIMP, 6)
+finalIMP7 <- complete(binlogtestIMP, 7)
+finalIMP8 <- complete(binlogtestIMP, 8)
+finalIMP9 <- complete(binlogtestIMP, 9)
+finalIMP10 <- complete(binlogtestIMP, 10)
+finalIMP11 <- complete(binlogtestIMP, 11)
+finalIMP12 <- complete(binlogtestIMP, 12)
+finalIMP13 <- complete(binlogtestIMP, 13)
+finalIMP14 <- complete(binlogtestIMP, 14)
+finalIMP15 <- complete(binlogtestIMP, 15)
+finalIMP16 <- complete(binlogtestIMP, 16)
+finalIMP17 <- complete(binlogtestIMP, 17)
+finalIMP18 <- complete(binlogtestIMP, 18)
+finalIMP19 <- complete(binlogtestIMP, 19)
+finalIMP20 <- complete(binlogtestIMP, 20)
+
+##check no missing data in each imputed dataset
+sapply(finalIMP1, function(x) sum(is.na(x)))
+sapply(finalIMP2, function(x) sum(is.na(x)))
+sapply(finalIMP3, function(x) sum(is.na(x)))
+sapply(finalIMP4, function(x) sum(is.na(x)))
+sapply(finalIMP5, function(x) sum(is.na(x)))
+sapply(finalIMP6, function(x) sum(is.na(x)))
+sapply(finalIMP7, function(x) sum(is.na(x)))
+sapply(finalIMP8, function(x) sum(is.na(x)))
+sapply(finalIMP9, function(x) sum(is.na(x)))
+sapply(finalIMP10, function(x) sum(is.na(x)))
+sapply(finalIMP11, function(x) sum(is.na(x)))
+sapply(finalIMP12, function(x) sum(is.na(x)))
+sapply(finalIMP13, function(x) sum(is.na(x)))
+sapply(finalIMP14, function(x) sum(is.na(x)))
+sapply(finalIMP15, function(x) sum(is.na(x)))
+sapply(finalIMP16, function(x) sum(is.na(x)))
+sapply(finalIMP17, function(x) sum(is.na(x)))
+sapply(finalIMP18, function(x) sum(is.na(x)))
+sapply(finalIMP19, function(x) sum(is.na(x)))
+sapply(finalIMP20, function(x) sum(is.na(x)))
+##list imp data frame
+write.datlist(datlist = binlogtestIMP, name = "implist", type = "Rdata")
+
+##create a list of imputed datasets for mi.t.test
+dataset1 <- complete(binlogtestIMP, 1)
+dataset2 <- complete(binlogtestIMP, 2)
+dataset3 <- complete(binlogtestIMP, 3)
+dataset4 <- complete(binlogtestIMP, 4)
+dataset5 <- complete(binlogtestIMP, 5)
+dataset6 <- complete(binlogtestIMP, 6)
+dataset7 <- complete(binlogtestIMP, 7)
+dataset8 <- complete(binlogtestIMP, 8)
+dataset9 <- complete(binlogtestIMP, 9)
+dataset10 <- complete(binlogtestIMP, 10)
+dataset11 <- complete(binlogtestIMP, 11)
+dataset12 <- complete(binlogtestIMP, 12)
+dataset13 <- complete(binlogtestIMP, 13)
+dataset14 <- complete(binlogtestIMP, 14)
+dataset15 <- complete(binlogtestIMP, 15)
+dataset16 <- complete(binlogtestIMP, 16)
+dataset17 <- complete(binlogtestIMP, 17)
+dataset18 <- complete(binlogtestIMP, 18)
+dataset19 <- complete(binlogtestIMP, 19)
+dataset20 <- complete(binlogtestIMP, 20)
+
+##define epilepsy as factor variable in each imp dataset
+dataset1$fs030 <- factor(dataset1$fs030)
+dataset2$fs030 <- factor(dataset2$fs030)
+dataset3$fs030 <- factor(dataset3$fs030)
+dataset4$fs030 <- factor(dataset4$fs030)
+dataset5$fs030 <- factor(dataset5$fs030)
+dataset6$fs030 <- factor(dataset6$fs030)
+dataset7$fs030 <- factor(dataset7$fs030)
+dataset8$fs030 <- factor(dataset8$fs030)
+dataset9$fs030 <- factor(dataset9$fs030)
+dataset10$fs030 <- factor(dataset10$fs030)
+dataset11$fs030 <- factor(dataset11$fs030)
+dataset12$fs030 <- factor(dataset12$fs030)
+dataset13$fs030 <- factor(dataset13$fs030)
+dataset14$fs030 <- factor(dataset14$fs030)
+dataset15$fs030 <- factor(dataset15$fs030)
+dataset16$fs030 <- factor(dataset16$fs030)
+dataset17$fs030 <- factor(dataset17$fs030)
+dataset18$fs030 <- factor(dataset18$fs030)
+dataset19$fs030 <- factor(dataset19$fs030)
+dataset20$fs030 <- factor(dataset20$fs030)
+
+##assign imp datasets to list object dataset.imp
+dataset.imp <-list(dataset1, dataset2, dataset3, dataset4, dataset5, dataset6, dataset7, dataset8, dataset9, dataset10, dataset11, dataset12, dataset13, dataset14, dataset15, dataset16, dataset17, dataset18, dataset19, dataset20)
+
+##check convergence of imputed data using graphs
+densityplot(binlogtestIMP, ~ q1073)
+densityplot(binlogtestIMP, ~ fs071)
+densityplot(binlogtestIMP, ~ peerstat)
+densityplot(binlogtestIMP, ~ EdAtt)
+densityplot(binlogtestIMP, ~ f_rgsc91)
+densityplot(binlogtestIMP, ~ q1rg91)
+
+bwplot(binlogtestIMP, q1073 ~ .imp)
+bwplot(binlogtestIMP, fs071 ~ .imp)
+bwplot(binlogtestIMP, peerstat ~ .imp)
+bwplot(binlogtestIMP, EdAtt ~ .imp)
+bwplot(binlogtestIMP, f_rgsc91 ~ .imp)
+bwplot(binlogtestIMP, q1rg91 ~ .imp)
+
+xyplot(binlogtestIMP, q1073 ~ .imp)
+xyplot(binlogtestIMP, fs071 ~ .imp)
+xyplot(binlogtestIMP, peerstat ~ .imp)
+xyplot(binlogtestIMP, EdAtt ~ .imp)
+xyplot(binlogtestIMP, f_rgsc91 ~ .imp)
+xyplot(binlogtestIMP, q1rg91 ~ .imp)
+
+##convert imputed dataset to long format and label foreign
+complete(binlogtestIMP)
+binlogtestIMP_long <- complete(binlogtestIMP, action = "long", include = TRUE)
+labelled::foreign_to_labelled(binlogtestIMP_long)
+
+##save imputed data set
+data1 <- complete(binlogtestIMP)
+save(binlogtestIMP, file = "data.Rdata")
+class(data1)
+getdata(data1)
+summary(data1)
+length(data1) -1
+summary(data1[[1]])
+data2 <- getdata(binlogtestIMP[[1]])
+class(data2)
+names(data2)
+data2$impdata
+
+
