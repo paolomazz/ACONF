@@ -1,0 +1,116 @@
+##conduct unadjusted binary logistic regression on complete-case data 
+binlogtest3 <- na.omit(binlogtest2)
+CCunfit <- glm(q1rg91 ~ fs030, family = binomial(link="logit"), data = binlogtest3)
+summary(CCunfit)
+AIC(logLik(CCunfit))
+BIC(logLik(CCunfit))
+PseudoR2(CCunfit)
+ctable <- coef(summary(CCunfit))
+print(ctable)
+parameters::model_parameters(CCunfit, exp = TRUE)
+
+##conduct adjusted binary logistic regression on complete-case data for IVs associated with outcome only
+binlogtest3 <- na.omit(binlogtest2)
+CCadfit2 <- glm(q1rg91 ~ fs030 + EdAtt + f_rgsc91 + rs175 + rs179 + rs180 + rs181 + fs004, family = binomial(link="logit"), data = binlogtest3)
+summary(CCadfit2)
+AIC(logLik(CCadfit2))
+BIC(logLik(CCadfit2))
+PseudoR2(CCadfit2)
+check.collin(CCadfit2)
+ctable <- coef(summary(CCadfit2))
+print(ctable2)
+parameters::model_parameters(CCadfit2, exp = TRUE)
+
+##conduct adjusted binary logistic regression on complete-case data for all IVs with outcome 
+binlogtest3 <- na.omit(binlogtest2)
+CCadfit <- glm(q1rg91 ~ fs030 + fs071 + peerstat + q1073 + EdAtt + f_rgsc91 + rs175 + rs179 + rs180 + rs181 + TotalRutterA + fs004, family = binomial(link="logit"), data = binlogtest3)
+summary(CCadfit)
+AIC(logLik(CCadfit))
+BIC(logLik(CCadfit))
+PseudoR2(CCadfit)
+check.collin(CCadfit)
+ctable <- coef(summary(CCadfit))
+print(ctable)
+parameters::model_parameters(CCadfit, exp = TRUE)
+
+##check residuals of complete case data
+binlogtest3$residuals <- resid(CCadfit)
+binlogtest3$standardized.residuals <- rstandard(CCadfit)
+binlogtest3$studentized.residuals <- rstudent(CCadfit)
+binlogtest3$cooks.distance <- cooks.distance(CCadfit)
+binlogtest3$dfbeta <- dfbeta(CCadfit)
+binlogtest3$dffit <- dffits(CCadfit)
+binlogtest3$leverage <- hatvalues(CCadfit)
+binlogtest3$covariance.ratios <- covratio(CCadfit)
+binlogtest3
+binlogtest3$standardized.residuals > 2 | binlogtest3$standardized.residuals < -2
+round(binlogtest3, digits = 3)
+binlogtest3$large.residual <- binlogtest3$standardized.residuals > 2 | binlogtest3$standardized.residuals < -2
+sum(binlogtest3$large.residual)
+binlogtest3[binlogtest3$large.residual, c("fs030", "fs071", "peerstat", "q1073", "EdAtt", "f_rgsc91", "rs175", "rs179", "rs180", "rs181", "TotalRutterA", "fs004", "standardized.residuals")]
+cooks <- binlogtest3[binlogtest3$large.residual, c("cooks.distance", "leverage", "covariance.ratios", "standardized.residuals", "studentized.residuals", "dfbeta")] 
+print(cooks, n=23)
+
+##Assess linearity of the logit for cont.var
+binlogtest3$logrs175 <- log(binlogtest3$rs175)*binlogtest3$rs175
+binlogtest3$logrs179 <- log(binlogtest3$rs179)*binlogtest3$rs179
+binlogtest3$logrs180 <- log(binlogtest3$rs180)*binlogtest3$rs180
+binlogtest3$logrs181 <- log(binlogtest3$rs181)*binlogtest3$rs181
+binlogtest3$logTotalRutterA <- log(binlogtest3$TotalRutterA)*binlogtest3$TotalRutterA
+penaltyTest.1 <- glm(q1rg91 ~ fs030 + fs071 + peerstat + q1073 + EdAtt + f_rgsc91 + rs175 + rs179 + rs180 + rs181 + TotalRutterA + fs004 + logrs175 + logrs179 + logrs180 + logrs181 + logTotalRutterA, family = binomial(link="logit"), data = binlogtest3)
+summary(penaltyTest.1)
+CCadfitLogs <- glm(q1rg91 ~ fs030 + fs071 + peerstat + q1073 + EdAtt + f_rgsc91 + fs004 + logrs175 + logrs179 + logrs180 + logrs181 + logTotalRutterA, family = binomial(link="logit"), data = binlogtest3)
+summary(CCadfitLogs)
+AIC(logLik(CCadfitLogs))
+BIC(logLik(CCadfitLogs))
+PseudoR2(CCadfitLogs)
+check.collin(CCadfitLogs)
+ctable <- coef(summary(CCadfitLogs))
+print(ctable)
+parameters::model_parameters(CCadfitLogs, exp = TRUE)
+
+##conduct MLM binariy logistic regression with 2 levels, fixed slope, random intercept
+MLM2 <- glmer(q1rg91 ~ fs030 + (1 | fs004), data = binlogtest, family = binomial(link="logit"), control = glmerControl(optimizer = "bobyqa"), nAGQ = 0)
+summary(MLM2)
+AIC(logLik(MLM2))
+
+##conduct binariy logistic regression with 2 levels, randome slope, random intercept
+ccfit <- glmer(q1rg91 ~ fs030 + fs071 + peerstat + q1073 + q1098_total + f_rgsc91 + rs175 + rs179 + rs180 + rs181 + TotalRutterA + (fs030 | fs004), data = binlogtest, family = binomial(link="logit"), control = glmerControl(optimizer = "bobyqa"), nAGQ = 0)
+summary(ccfit)
+ctable <- coef(summary(ccfit))
+print(ctable)
+exp(fixef(ccfit))
+parameters::model_parameters(ccfit, exp = TRUE)
+
+##check correlation of variables (correlation test or vif)
+##check linearity between continuous predictor variable and the log odds of the outcomes (box-tidwell test or  graphs)
+##correlation of MLM
+library(car)
+install.packages("sjstats")
+library(sjstats)
+cor.test(ccfit, method = "spearman")
+performance::icc(ccfit)
+
+##boxtidwell
+library(car)
+boxTidwell(q1rg91 ~ rs175 + rs179 + rs180 + rs181, ~ fs030 + fs004 + fs071 + peerstat + q1073 + q1098_total + f_rgsc91, data=binlogtest) 
+
+##scatterplot 
+library(dplyr)
+binlogtest2 <- na.omit(binlogtest)
+ccfit2 <- glmer(q1rg91 ~ fs030 + fs071 + peerstat + q1073 + q1098_total + f_rgsc91 + rs175 + rs179 + rs180 + rs181 + TotalRutterA + (fs030 | fs004), data = binlogtest2, family = binomial(link="logit"), control = glmerControl(optimizer = "bobyqa"), nAGQ = 0)
+summary(ccfit2)
+probabilities <- predict(ccfit2, type = "response")
+predicted.classes <- ifelse(probabilities > 0.5, "pos", "neg")
+mydata <- binlogtest2 %>%
+  dplyr::select_if(is.numeric)
+predictors <- colnames(mydata)
+mydata <- mydata %>%
+  mutate(logit = log(probabilities/(1-probabilities))) %>%
+  gather(key = "predictors", value = "predictor.value", -logit)
+ggplot(mydata, aes(logit, predictor.value)) + geom_point(size = 0.5, alpha = 0.5) + geom_smooth(method = "loess") + theme_bw() + facet_wrap(~predictors, scales = "free_y")
+
+##variance inflation factor
+check.collin(ccfit2)
+check.collin(MLM1a)
+
